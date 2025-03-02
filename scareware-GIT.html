@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SECURITY ALERT</title>
+    <style>
+        body {
+            background-color: black;
+            color: red;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            cursor: crosshair;
+        }
+
+        .popup {
+            position: absolute;
+            padding: 15px;
+            background: black;
+            border: 3px solid red;
+            color: white;
+            text-align: center;
+            z-index: 1000;
+            box-shadow: 0 0 10px red;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .flashing {
+            animation: flash 0.2s infinite alternate;
+        }
+
+        @keyframes flash {
+            0% {
+                background-color: black;
+            }
+
+            100% {
+                background-color: red;
+            }
+        }
+
+        .ip-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 50px;
+            font-weight: bold;
+            color: white;
+            z-index: 9999;
+            background: black;
+            padding: 20px;
+            border: 5px solid red;
+            box-shadow: 0 0 15px red;
+        }
+
+        @media (max-width: 768px) {
+            .popup {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .ip-box {
+                font-size: 30px;
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .ip-box {
+                font-size: 24px;
+                padding: 10px;
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <script>
+        // List of fake warning messages
+        const messages = [
+            "🤡 DET VAR DUMT",
+            "❌ ERROR: Unauthorized access!",
+            "⚡ CRITICAL THREAT DETECTED!",
+            "🔥 WARNING: System failure imminent!",
+            "🚨 SECURITY BREACH DETECTED!",
+            "🛑 ALERT: Immediate action required!",
+            "❗ Malicious software found!",
+            "💀 Your files are at risk!",
+            "🔒 Your data is being stolen!"
+        ];
+
+        function createPopupAtRandomPosition() {
+            const popup = document.createElement("div");
+            popup.classList.add("popup");
+
+            popup.innerText = messages[Math.floor(Math.random() * messages.length)];
+
+            const x = Math.min(Math.random() * window.innerWidth, window.innerWidth - 150);
+            const y = Math.min(Math.random() * window.innerHeight, window.innerHeight - 100);
+
+            popup.style.left = `${x}px`;
+            popup.style.top = `${y}px`;
+
+            document.body.appendChild(popup);
+
+            setTimeout(() => {
+                popup.style.transform = `translate(${Math.random() * 10 - 5}px, ${Math.random() * 10 - 5}px)`;
+            }, 200);
+
+            playScarySound();
+        }
+
+        function createPopupAtClick(event) {
+            const popup = document.createElement("div");
+            popup.classList.add("popup");
+
+            // Random warning message
+            popup.innerText = messages[Math.floor(Math.random() * messages.length)];
+
+            // Position based on mouse click
+            popup.style.left = `${event.pageX}px`;
+            popup.style.top = `${event.pageY}px`;
+
+            document.body.appendChild(popup);
+
+            setTimeout(() => {
+                popup.style.transform = `translate(${Math.random() * 10 - 5}px, ${Math.random() * 10 - 5}px)`;
+            }, 200);
+
+            // Play scary sound on each popup
+            playScarySound();
+        }
+
+        // Function to create an initial popup when the page loads
+        function createInitialPopup() {
+            const popup = document.createElement("div");
+            popup.classList.add("popup");
+
+            popup.innerText = "⚠️ CRITICAL ERROR: SYSTEM FAILURE DETECTED!";
+            popup.style.left = "50%";
+            popup.style.top = "50%";
+            popup.style.transform = "translate(-50%, -50%)";
+
+            document.body.appendChild(popup);
+        }
+
+        function playScarySound() {
+            const sound = new Audio("https://www.myinstants.com/media/sounds/scream.mp3");
+            sound.play().catch(() => {
+                console.log("Sound autoplay blocked, waiting for user interaction.");
+            });
+        }
+
+        function startFlashingEffect() {
+            setInterval(() => {
+                document.body.classList.toggle("flashing");
+            }, 500);
+        }
+
+        function startAutoPopups() {
+            setInterval(createPopupAtRandomPosition, 500); 
+        }
+
+        // Function to get and display the user's IP address
+        function fetchAndDisplayIP() {
+            fetch("https://api.ipify.org?format=json")
+                .then(response => response.json())
+                .then(data => {
+                    const ipBox = document.createElement("div");
+                    ipBox.classList.add("ip-box");
+                    ipBox.innerHTML = `Your IP: ${data.ip} 👀`;
+
+                    document.body.appendChild(ipBox);
+                })
+                .catch(error => console.error("Failed to fetch IP", error));
+        }
+
+        document.addEventListener("click", createPopupAtClick);
+        document.addEventListener("touchstart", createPopupAtClick);
+
+        // Start scareware on page load
+        window.onload = function () {
+            createInitialPopup();
+            startFlashingEffect();
+            startAutoPopups();
+            fetchAndDisplayIP();
+        };
+    </script>
+</body>
+
+</html>
